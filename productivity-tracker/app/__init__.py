@@ -1,0 +1,1 @@
+"""Employee activity tracker package."""

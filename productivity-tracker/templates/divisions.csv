@@ -1,0 +1,3 @@
+code,name,description,is_active
+OPS,Operations,Regional operations execution,TRUE
+DAT,Data Analytics,Analytics and reporting,FALSE

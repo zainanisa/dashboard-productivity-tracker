@@ -1,0 +1,3 @@
+activity_date,employee_code,work_item_title,project_code,activity_type,summary,details,hours_spent,status,progress_pct,blocker_note,next_action,created_by
+2026-04-15,EMP011,Prepare test cases,PRJ-004,Execution,Drafted the first QA checklist,Covered admin CRUD flow,2.5,In Progress,40,,Add regression cases,CSV Import
+2026-04-15,EMP012,Refresh executive chart pack,PRJ-005,Analysis,Collected source metrics,Waiting for final data cut-off,3.0,Blocked,15,Source data not finalized,Follow up with data owner,CSV Import

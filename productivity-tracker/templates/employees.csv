@@ -1,0 +1,3 @@
+employee_code,full_name,email,job_title,division_code,manager_name,employment_status,joined_date,is_active
+EMP011,Kirana Test,kirana.test@example.com,QA Analyst,OPS,Nadia Putri,Active,2026-04-01,TRUE
+EMP012,Laras Utami,laras.utami@example.com,Data Analyst,DAT,Arif Nugroho,Active,2026-04-05,TRUE
