@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id" x-data="{ 
+    currentTab: 'dashboard-member', 
+    showModal: false,
+    role: 'Member',
+    notifications: ['Alert: Incident Critical INC-99 belum selesai > 2 jam!']
+}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IT Ops Activity Log</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800">
+
+    <div class="flex h-screen overflow-hidden">
+        <aside class="w-64 bg-slate-900 text-white flex flex-col">
+            <div class="p-6 text-xl font-bold border-b border-slate-700 flex items-center">
+                <i class="fas fa-bolt text-yellow-400 mr-2"></i> IT OPS LOG
+            </div>
+            <nav class="flex-1 p-4 space-y-2">
+                <button @click="currentTab = 'dashboard-member'" :class="currentTab === 'dashboard-member' ? 'bg-blue-600' : 'hover:bg-slate-800'" class="w-full flex items-center p-3 rounded-lg transition">
+                    <i class="fas fa-chart-line w-6"></i> Dashboard Saya
+                </button>
+                <button @click="currentTab = 'incidents'" :class="currentTab === 'incidents' ? 'bg-blue-600' : 'hover:bg-slate-800'" class="w-full flex items-center p-3 rounded-lg transition">
+                    <i class="fas fa-exclamation-triangle w-6"></i> Incident Tracker
+                </button>
+                <div class="pt-4 pb-2 text-xs font-semibold text-gray-500 uppercase">Admin View</div>
+                <button @click="currentTab = 'dashboard-admin'" :class="currentTab === 'dashboard-admin' ? 'bg-blue-600' : 'hover:bg-slate-800'" class="w-full flex items-center p-3 rounded-lg transition">
+                    <i class="fas fa-users w-6"></i> Produktivitas Tim
+                </button>
+            </nav>
+            <div class="p-4 border-t border-slate-700">
+                <div class="flex items-center space-x-3 text-sm">
+                    <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center font-bold">B</div>
+                    <div>
+                        <p class="font-medium">Budi (Member)</p>
+                        <p class="text-xs text-gray-400">IT Ops Engineer</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 overflow-y-auto">
+            <header class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-10">
+                <h2 class="text-xl font-semibold text-gray-700" x-text="currentTab === 'dashboard-member' ? 'Personal Dashboard' : (currentTab === 'dashboard-admin' ? 'Admin Productivity Dashboard' : 'Incident Tracker')"></h2>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <i class="fas fa-bell text-gray-400 text-xl cursor-pointer"></i>
+                        <span class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] px-1 rounded-full">1</span>
+                    </div>
+                    <button @click="showModal = true" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition">
+                        <i class="fas fa-plus mr-2"></i> Log Aktivitas
+                    </button>
+                </div>
+            </header>
+
+            <div class="p-6">
+                <section x-show="currentTab === 'dashboard-member'" x-cloak>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-sm text-gray-500">Jam Log Hari Ini</p>
+                            <p class="text-2xl font-bold">6.5 Jam</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-sm text-gray-500">Log Minggu Ini</p>
+                            <p class="text-2xl font-bold">32 Jam</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-sm text-gray-500">Streak Harian</p>
+                            <p class="text-2xl font-bold text-orange-500">5 Hari 🔥</p>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                            <p class="text-sm text-gray-500">Completion Rate</p>
+                            <p class="text-2xl font-bold text-green-600">92%</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-64 flex flex-col items-center justify-center">
+                            <p class="font-semibold mb-4">Aktivitas 7 Hari Terakhir</p>
+                            <div class="w-full h-full bg-gray-50 rounded flex items-end justify-around p-4 space-x-2">
+                                <div class="w-full bg-blue-400 rounded-t" style="height: 60%"></div>
+                                <div class="w-full bg-blue-500 rounded-t" style="height: 80%"></div>
+                                <div class="w-full bg-blue-400 rounded-t" style="height: 45%"></div>
+                                <div class="w-full bg-blue-600 rounded-t" style="height: 90%"></div>
+                                <div class="w-full bg-blue-400 rounded-t" style="height: 70%"></div>
+                                <div class="w-full bg-blue-500 rounded-t" style="height: 85%"></div>
+                                <div class="w-full bg-blue-600 rounded-t" style="height: 75%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 h-64 flex flex-col items-center justify-center">
+                            <p class="font-semibold mb-4">Distribusi Kategori Bulan Ini</p>
+                            <div class="w-32 h-32 rounded-full border-8 border-blue-500 relative flex items-center justify-center">
+                                <div class="absolute w-full h-full rounded-full border-8 border-green-400 border-t-transparent border-l-transparent transform rotate-45"></div>
+                                <span class="text-xs font-bold">Incident 45%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="p-4 border-b border-gray-100 flex justify-between items-center">
+                            <h3 class="font-bold">10 Entri Log Terakhir</h3>
+                        </div>
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-4 font-semibold">Tanggal</th>
+                                    <th class="p-4 font-semibold">Judul Task</th>
+                                    <th class="p-4 font-semibold">Kategori</th>
+                                    <th class="p-4 font-semibold">Durasi</th>
+                                    <th class="p-4 font-semibold">Status</th>
+                                    <th class="p-4 font-semibold">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="p-4">14 Apr 2026</td>
+                                    <td class="p-4 font-medium">Fix Core Switch Down - Gd. A</td>
+                                    <td class="p-4"><span class="px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs">Incident</span></td>
+                                    <td class="p-4">120 Menit</td>
+                                    <td class="p-4"><span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Completed</span></td>
+                                    <td class="p-4 text-blue-600 cursor-pointer hover:underline">Edit</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4">14 Apr 2026</td>
+                                    <td class="p-4 font-medium">Monitoring Link ISP</td>
+                                    <td class="p-4"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">Monitoring</span></td>
+                                    <td class="p-4">30 Menit</td>
+                                    <td class="p-4"><span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Completed</span></td>
+                                    <td class="p-4 text-blue-600 cursor-pointer hover:underline">Edit</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section x-show="currentTab === 'dashboard-admin'" x-cloak>
+                    <div class="bg-white p-4 rounded-xl shadow-sm mb-6 flex flex-wrap gap-4 items-center justify-between border border-gray-100">
+                        <div class="flex gap-4">
+                            <input type="date" class="border rounded px-3 py-1 text-sm">
+                            <select class="border rounded px-3 py-1 text-sm">
+                                <option>Semua Kategori</option>
+                            </select>
+                        </div>
+                        <button class="bg-green-600 text-white px-4 py-1 rounded text-sm hover:bg-green-700 transition">
+                            <i class="fas fa-file-csv mr-2"></i> Export CSV [cite: 46]
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="p-4 font-semibold">Member</th>
+                                    <th class="p-4 font-semibold text-center">Log Hari Ini</th>
+                                    <th class="p-4 font-semibold text-center">Jam/Minggu</th>
+                                    <th class="p-4 font-semibold text-center">Incident</th>
+                                    <th class="p-4 font-semibold text-center">Score</th>
+                                    <th class="p-4 font-semibold">Status Aktif</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="p-4 flex items-center">
+                                        <div class="w-7 h-7 bg-blue-200 text-blue-800 rounded-full flex items-center justify-center text-[10px] font-bold mr-3">BT</div>
+                                        <span>Budi Triyanto</span>
+                                    </td>
+                                    <td class="p-4 text-center">6.5h</td>
+                                    <td class="p-4 text-center">32h</td>
+                                    <td class="p-4 text-center">4</td>
+                                    <td class="p-4 text-center font-bold text-green-600">88</td>
+                                    <td class="p-4"><span class="flex items-center text-xs"><span class="w-2 h-2 bg-green-500 rounded-full mr-2"></span> Active</span></td>
+                                </tr>
+                                <tr class="hover:bg-gray-50 cursor-pointer">
+                                    <td class="p-4 flex items-center">
+                                        <div class="w-7 h-7 bg-orange-200 text-orange-800 rounded-full flex items-center justify-center text-[10px] font-bold mr-3">AY</div>
+                                        <span>Ani Yulianti</span>
+                                    </td>
+                                    <td class="p-4 text-center">2.0h</td>
+                                    <td class="p-4 text-center">15h</td>
+                                    <td class="p-4 text-center">1</td>
+                                    <td class="p-4 text-center font-bold text-orange-600">45</td>
+                                    <td class="p-4"><span class="flex items-center text-xs"><span class="w-2 h-2 bg-gray-300 rounded-full mr-2"></span> 3h ago</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section x-show="currentTab === 'incidents'" x-cloak>
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-50 border-b">
+                                <tr>
+                                    <th class="p-4 font-semibold">Prioritas</th>
+                                    <th class="p-4 font-semibold">Judul Insiden</th>
+                                    <th class="p-4 font-semibold">Assignee</th>
+                                    <th class="p-4 font-semibold">Durasi</th>
+                                    <th class="p-4 font-semibold text-center">SLA Flag</th>
+                                    <th class="p-4 font-semibold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                <tr>
+                                    <td class="p-4"><span class="px-2 py-1 bg-red-600 text-white rounded-md text-[10px] font-bold">CRITICAL</span></td>
+                                    <td class="p-4 font-medium">Core Database Connection Lost</td>
+                                    <td class="p-4">Budi T.</td>
+                                    <td class="p-4">150m</td>
+                                    <td class="p-4 text-center text-red-600 font-bold animate-pulse"><i class="fas fa-flag mr-1"></i> BREACH</td>
+                                    <td class="p-4"><span class="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs">In Progress</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="p-4"><span class="px-2 py-1 bg-orange-500 text-white rounded-md text-[10px] font-bold text-xs uppercase">High</span></td>
+                                    <td class="p-4 font-medium">VPN Access Denied - Finance Team</td>
+                                    <td class="p-4">Ani Y.</td>
+                                    <td class="p-4">45m</td>
+                                    <td class="p-4 text-center text-green-600"><i class="fas fa-check-circle"></i> OK</td>
+                                    <td class="p-4"><span class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Resolved</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <div x-show="showModal" x-cloak class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold">Catat Aktivitas Baru</h3>
+                <button @click="showModal = false" class="text-gray-400 hover:text-gray-600"><i class="fas fa-times"></i></button>
+            </div>
+            <form class="p-6 space-y-4">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Tanggal</label>
+                        <input type="date" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none" value="2026-04-14">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Kategori</label>
+                        <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                            <option>Incident Handling</option>
+                            <option>Maintenance</option>
+                            <option>Monitoring</option>
+                            <option>Request Fulfillment</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Judul Task</label>
+                    <input type="text" placeholder="Apa yang Anda kerjakan?" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Durasi (Menit)</label>
+                        <input type="number" placeholder="Contoh: 60" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">No. Tiket (Opsional)</label>
+                        <input type="text" placeholder="INC-xxxx" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Status</label>
+                    <div class="flex gap-4">
+                        <label class="flex items-center text-sm"><input type="radio" name="status" class="mr-2" checked> In Progress</label>
+                        <label class="flex items-center text-sm"><input type="radio" name="status" class="mr-2"> Completed</label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase mb-1 text-gray-400">Catatan Resolusi</label>
+                    <textarea class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-gray-50 cursor-not-allowed" disabled placeholder="Wajib diisi jika status Completed"></textarea>
+                </div>
+                <div class="pt-4 flex gap-3">
+                    <button type="button" @click="showModal = false" class="flex-1 bg-gray-100 hover:bg-gray-200 py-2 rounded-lg font-bold text-sm transition">Batal</button>
+                    <button type="button" @click="showModal = false" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-bold text-sm shadow-lg shadow-blue-200 transition">Simpan Log</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div x-show="notifications.length > 0" x-cloak class="fixed bottom-6 right-6 z-[60] animate-bounce">
+        <div class="bg-red-600 text-white p-4 rounded-xl shadow-2xl flex items-center space-x-4 border-2 border-white">
+            <i class="fas fa-exclamation-circle text-2xl"></i>
+            <div>
+                <p class="text-xs uppercase font-bold opacity-80">System Alert</p>
+                <p class="font-medium" x-text="notifications[0]"></p>
+            </div>
+            <button @click="notifications = []" class="hover:opacity-50"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+</body>
+</html>
